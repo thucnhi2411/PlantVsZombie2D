@@ -6,7 +6,7 @@ import java.util.*;
 /**
  * Write a description of class PlantVsZombie here.
  * 
- * @author (your name) 
+ * Thuc Nhi Le
  * @version (a version number or a date)
  */
 public class PlantVsZombie extends GraphicsProgram
@@ -22,140 +22,212 @@ public class PlantVsZombie extends GraphicsProgram
     private GLabel sunNumber; // the label showing the number of sun
     private GImage sunflowerChoice; // the choice of sunflower
     private GImage peashooterChoice; // the choice of peashooter
-    private GPoint lastPoint;
+    private GImage wallChoice; // the choice of wall
+    private GPoint lastPoint; // last point
     private boolean 
-        sunflowerDragged = false,
-        peashooterDragged = false;
+    sunflowerDragged = false, // whether sunflower is dragged
+    peashooterDragged = false, // whether peashooter is dragged
+    wallDragged = false; // whether wall is dragged
     private Zombie[] zombie = new Zombie[30]; // the array of zombie
     private RandomGenerator rand = RandomGenerator.getInstance(); //the random generator
     private boolean gameOver = false; // whether the game is over
-        
-    public void init(){
-        drawGraphics();
 
+    /** the init method */
+    public void init(){
+        drawGraphics(); // draw the graphics
     }
 
     /** start dragging if the object is pressed on */
     public void mousePressed(GPoint point){
+        // if the object is pressed, set the boolean value to true
         if (sunflowerChoice.contains(point)) sunflowerDragged = true;
         if (peashooterChoice.contains(point)) peashooterDragged = true;
+        if (wallChoice.contains(point)) wallDragged = true;
         lastPoint = point;
     }
 
     /** move the object when it is dragged */
     public void mouseDragged(GPoint point){
+        // if sunflower is dragged
         if (sunflowerDragged){
             sunflowerChoice.move(point.getX()-lastPoint.getX(),
                 point.getY()-lastPoint.getY());
         }
-
+        // if peashooter is dragged
         if (peashooterDragged){
             peashooterChoice.move(point.getX()-lastPoint.getX(),
                 point.getY()-lastPoint.getY());
         }
-
+        // if wall is dragged
+        if (wallDragged){
+            wallChoice.move(point.getX()-lastPoint.getX(),
+                point.getY()-lastPoint.getY());
+        }
+        // assign point to lastpoint
         lastPoint = point;
     }
 
     /** stop dragging */
     public void mouseReleased(GPoint point) {
-        double x = point.getX(); // the location of the mouse
-        double y = point.getY();
+        double x = point.getX(); // the x location of the mouse
+        double y = point.getY(); // the y location of the mouse
         double xLocation = 0; // the x location of the plant
         double yLocation = 0; // the y location of the plant
         int col = 0; // the column of the grass cell
         int row = 0; // the row of the grass cell
-        
+
         // find the location to place to plant 
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 8; j++) { 
                 if (x>j*100+160 && x<(j+1)*100+160 && y>i*100+200 && y<(i+1)*100+200) {
-                    xLocation = j*100+10+200;
-                    yLocation = i*100+50+200;
-                    row = i;
-                    col = j;
+                    xLocation = j*100+10+200; // set the x location in the cell
+                    yLocation = i*100+50+200; // set the y location in the cell
+                    row = i; // find the row
+                    col = j; // find the column
                 }
             }
         }
-        
+
         // if the sunflower is dragged
         if (sunflowerDragged){
+            // if out of grid
             if (grass[row][col].isFilled() == true || x<160 || x>960 || y<200 || y>700) {
                 sunflowerChoice.setLocation(170,50);
                 sunflowerDragged = false;
             } else {
+                // create the sunflower if the mouse is released in the grid
                 Sunflower sunflower = new Sunflower(this);
                 add(sunflower,xLocation,yLocation);
                 new Thread(sunflower).start();
                 sunflowerChoice.setLocation(170,50);
-                grass[row][col].fill();
-                sunflowerDragged = false;
+                // set the grass to filled status
+                grass[row][col].fill(); 
+                // stop dragging 
+                sunflowerDragged = false; 
             }
         }
 
         // if the peashooter is dragged
         if (peashooterDragged){
+            // if out of grid
             if (grass[row][col].isFilled() == true || x<160 || x>960 || y<200 || y>700) {
                 peashooterChoice.setLocation(270,50);
                 peashooterDragged = false;
             } else {
+                // create the peashooter if the mouse is released in the grid
                 Peashooter peashooter = new Peashooter(this);
                 add(peashooter,xLocation,yLocation);
                 new Thread(peashooter).start();
                 peashooterChoice.setLocation(270,50);
+                // set the grass to filled status
                 grass[row][col].fill();
+                // stop dragging 
                 peashooterDragged = false;
             }
         }
 
-    }
-   
-    /** check collision of the sunflower*/
-    public void checkCollision(Sunflower sunflower){
-        // check if the zombie hit the sunflower
-        for (int i=0; i<30; i++){
-            // if the zombie is in the screen
-            if (zombie[i].getX()<1000 && zombie[i].getBounds().intersects(sunflower.getBounds())){
-                sunflower.die();
+        // if the wall is dragged
+        if (wallDragged){
+            // if out of grid
+            if (grass[row][col].isFilled() == true || x<160 || x>960 || y<200 || y>700) {
+                wallChoice.setLocation(370,50);
+                wallDragged = false;
+            } else {
+                // create the wall if the mouse is released in the grid
+                Wall wall = new Wall(this);
+                add(wall,xLocation,yLocation);
+                new Thread(wall).start();
+                wallChoice.setLocation(370,50);
+                // set the grass to filled status
+                grass[row][col].fill();
+                // stop dragging 
+                wallDragged = false;
             }
         }
     }
-    
+
+    /** check collision of the sunflower*/
+    public void checkCollision(Sunflower sunflower){
+        // check if the zombie hits the sunflower
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<980 && zombie[i].getBounds().intersects(sunflower.getBounds())){
+                sunflower.die(); // the sunflower disappears
+                setVacant(sunflower.getX(),sunflower.getY()); //set the grass to vacant status
+            }
+        }
+    }
+
     /** check collision of the peashooter*/
     public void checkCollision(Peashooter peashooter){
         // check if the zombie hit the peashooter
         for (int i=0; i<30; i++){
             // if the zombie is in the screen
-            if (zombie[i].getX()<1000 && zombie[i].getBounds().intersects(peashooter.getBounds())){
-                peashooter.die();
+            if (zombie[i].getX()<980 && zombie[i].getBounds().intersects(peashooter.getBounds())){
+                peashooter.die(); // the peashooter disappears
+                setVacant(peashooter.getX(),peashooter.getY()); // set the grass to vacant status
             }
         }
     }
-    
+
+    /** check collision of the wall */
+    public void checkCollision(Wall wall){
+        // check if the zombie hit the wall
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<980 && zombie[i].getBounds().intersects(wall.getBounds())){
+                zombie[i].pause(); // pause the zombie
+                // after pausing the zombie, kill the wall and set the grass to vacant status
+                if (zombie[i].getResume() == true) {
+                    wall.die();
+                    setVacant(wall.getX(), wall.getY());
+                }
+            }
+        }
+    }
+
     /** check collision of the zombie */
     public void checkCollision(Zombie zombie){
         double x = zombie.getX();
         double y = zombie.getY();
-        // check if the zombie hit the left wall
-        if (x-zombie.getWidth()/2<0) {
+        // check if the zombie hits the house
+        if (x-zombie.getWidth()/2<20) {
             gameOver();
         }
     }
-    
+
     /** check collision of the pea*/
     public void checkCollision(Pea pea){
         // check if the pea hit the zombie
         for (int i=0; i<30; i++){
             // if the zombie is in the screen
-            if (zombie[i].getX()<1000 && pea.getBounds().intersects(zombie[i].getBounds())){
+            if (zombie[i].getX()<980 && pea.getBounds().intersects(zombie[i].getBounds())){
                 zombie[i].decreaseLives();
                 zombie[i].setLocation(getWidth()+500,zombie[i].getY()); // the zombie is killed
-                pea.die();
+                pea.die(); // the pea disappears
             }
         }
-       
+
     }
-    
+
+    // find the vacant grass cell 
+    private void setVacant(double x,double y){
+        int col = 0; // the column of the grass cell
+        int row = 0; // the row of the grass cell
+        // find the location to place to plant 
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 8; j++) { 
+                if (x>j*100+160 && x<(j+1)*100+160 && y>i*100+200 && y<(i+1)*100+200) {
+                    row = i;
+                    col = j;
+                }
+            }
+        }
+        // set the filled status to false
+        grass[row][col].vacant();
+    }
+
+    // create the sun and animation
     public void createSun(Sunflower sunflower){
         Sun sun = new Sun(this);
         add(sun,sunflower.getX(),sunflower.getY());
@@ -163,18 +235,21 @@ public class PlantVsZombie extends GraphicsProgram
         increaseSun();
         pause(3000);
     }
-    
+
+    // create the pea and animation
     public void createPea(Peashooter peashooter){
         Pea pea = new Pea(this);
         add(pea,peashooter.getX(),peashooter.getY());
         new Thread(pea).start();
         pause(1800);
     }
+
     // increase the sun
     public void increaseSun(){
         sun++;
         sunNumber.setLabel(sun+"");
     }
+
     // draw the graphics
     private void drawGraphics(){
         // draw the grass
@@ -190,7 +265,7 @@ public class PlantVsZombie extends GraphicsProgram
         houseLabel.setSize(40,500);
         add(houseLabel,15,200);
 
-        // draw the choice of plant
+        // draw the 6 choices of plant
         drawPlantChoice();
 
         // draw the board showing the sun acquired
@@ -208,6 +283,7 @@ public class PlantVsZombie extends GraphicsProgram
         sun.setSize(40,40);
         add(sun,60,80);
 
+        // draw the sunflower choice
         sunflowerChoice = new GImage("sunflower.gif");
         sunflowerChoice.setSize(80,80);
         add(sunflowerChoice,170,50);
@@ -216,20 +292,25 @@ public class PlantVsZombie extends GraphicsProgram
         peashooterChoice = new GImage("peashooter.gif");
         peashooterChoice.setSize(80,80);
         add(peashooterChoice,270,50);
-        
+
+        // draw the wall choice
+        wallChoice = new GImage("wall.png");
+        wallChoice.setSize(80,80);
+        add(wallChoice,370,50);
+
         // add the zombie
         for (int i = 0; i<30; i++){
             boolean stronger = false;
             if (i%3==0) stronger = true;
             zombie[i] = new Zombie(2,180,stronger,this);
-            add(zombie[i],rand.nextDouble(getWidth()+300,getWidth()*3),210+ (i/6)*100);
+            add(zombie[i],rand.nextDouble(getWidth()+300,getWidth()*3),250+ (i/6)*100);
             if (stronger == true) zombie[i].stronger();
             new Thread(zombie[i]).start();
         }
 
     }
 
-    // draw the choice of plants
+    // draw the 6 choices of plants
     private void drawPlantChoice(){
         GRect[] choice = new GRect[6];
         for (int i = 0; i<6; i++){
@@ -260,29 +341,30 @@ public class PlantVsZombie extends GraphicsProgram
 
         }
     }
-    
+
+    // get the value of gameOver
     public boolean getGameOver(){
         return gameOver;
     }
-    
+
     /** The gameOver method when the game is Over */
     private void gameOver(){
-        
         gameOver = true;
         // stop the zombie
         for (int i = 0;i<30;i++){
             zombie[i].stopMoving(); 
         }
-        
+
+        // draw the black screen
         GRect blackscreen = new GRect(1000,720);
         blackscreen.setFilled(true);
         blackscreen.setColor(Color.BLACK);
         add(blackscreen,0,0);
-        
+
         // the label that appears when the game is over
         GImage gameOverImage = new GImage("gameOver.png");
         gameOverImage.setSize(1000,720);
         add(gameOverImage,0,0);
-        
+
     }
 }

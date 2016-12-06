@@ -1,60 +1,60 @@
 import acm.program.*;
 import acm.graphics.*;
 import java.awt.*;
-
 /**
- * Peashooter.java
+ * Wall.java.
  * 
- * A class for the peashooter that creates the sun
+ * A class for the Wall
  */
-public class Peashooter extends GCompound implements Runnable
+public class Wall extends GCompound implements Runnable 
 {
     // constants
-    private static final double DELAY = 500;
+    private static final double DELAY = 50;
     // instance variables 
     private PlantVsZombie game; // the main game
     private boolean isAlive = true;
+
     /**
-     * Constructor for objects of class peashooter
+     * Constructor for objects of class Wall
      */
-    public Peashooter(PlantVsZombie game)
+    public Wall(PlantVsZombie game)
     {
         // save the paramerters in instance variables
         this.game = game;
 
         // create the sub flower, centered at the local origin
-        GImage peashooter = new GImage("peashooter.gif");
-        peashooter.setSize(80,80);
-        add(peashooter, -80/2, -80/2);
+        GImage wall = new GImage("wall.png");
+        wall.setSize(80,80);
+        add(wall, -80/2, -80/2);
     }
 
     /** the run method */
     public void run() {
         while (isAlive && game.getGameOver() == false) {
             oneTimeStep();
-            pause(DELAY);
+            //pause(DELAY);
         }
         disappear();
     }
 
-    // control the animation
     public void oneTimeStep(){
         game.checkCollision(this);
-        game.createPea(this);
+
     }
 
-    /** kill the peashooter */
+    /** kill the wall */
     public void die() {
         isAlive = false;
     }
 
-    // get the value of isAlive
+    // get the value of isALive
     public boolean isAlive() {
         return isAlive;
     }
 
-    // the peashooter disappears
+    // the wall disappears
     private void disappear() {
         removeAll();
     }
 }
+

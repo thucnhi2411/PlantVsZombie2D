@@ -18,7 +18,6 @@ public class Pea extends GCompound implements Runnable {
     public Pea(PlantVsZombie game) {
         // save the parameters in instance variables
         this.game = game;
-        
 
         // create the ball centered at the local origin
         GOval ball = new GOval(-20/2,-20/2,20, 20);
@@ -35,17 +34,18 @@ public class Pea extends GCompound implements Runnable {
         }
         disappear();
     }
-    
+
+    // control the animation
     private void oneTimeStep(){
         movePolar(20,0);
         game.checkCollision(this);
     }
-    
+
     /** stop the animation */
     public void die() {
         isAlive = false;
     }
-    
+
     // the pea disappears
     private void disappear(){
         removeAll();

@@ -28,29 +28,31 @@ public class Sunflower extends GCompound implements Runnable
         sunflower.setSize(80,80);
         add(sunflower, -80/2, -80/2);
     }
-    
+
     /** the run method */
     public void run() {
         while (isAlive && game.getGameOver() == false) {
             oneTimeStep();
-            pause(DELAY);
         }
         disappear();
     }
-    
+
+    // control the animation
     public void oneTimeStep(){
         game.checkCollision(this);
-        game.createSun(this);
+        //game.createSun(this);
     }
+
     /** kill the sunflower */
     public void die() {
-       isAlive = false;
+        isAlive = false;
     }
-    
+
+    // get the value of isALive
     public boolean isAlive() {
         return isAlive;
     }
-    
+
     // the sunflower disappears
     private void disappear() {
         removeAll();
