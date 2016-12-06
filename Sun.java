@@ -9,7 +9,7 @@ import java.awt.*;
 public class Sun extends GCompound implements Runnable
 {
     // constants
-    private static final double DELAY = 500;
+    private static final double DELAY = 50;
     // instance variables 
     private PlantVsZombie game; // the main game
     
@@ -28,7 +28,13 @@ public class Sun extends GCompound implements Runnable
     }
     
     public void run(){
-        pause(2000);
-        removeAll();
+        while(true){
+            oneTimeStep();
+            pause(DELAY);
+        }
+    }
+    
+    private void oneTimeStep(){
+        movePolar(30,90);
     }
 }

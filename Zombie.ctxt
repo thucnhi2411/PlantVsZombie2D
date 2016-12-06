@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.params=speed\ angle\ stronger\ game
+comment0.target=Zombie(double,\ double,\ boolean,\ PlantVsZombie)
+comment0.text=the\ constructor,\ create\ the\ zombie
+comment1.params=
+comment1.target=boolean\ isStronger()
+comment2.params=
+comment2.target=void\ stronger()
+comment3.params=
+comment3.target=void\ run()
+comment3.text=the\ run\ method,\ to\ animate\ the\ zombie
+comment4.params=
+comment4.target=void\ decreaseLives()
+comment5.params=
+comment5.target=void\ stopMoving()
+comment6.params=
+comment6.target=void\ oneTimeStep()
+numComments=7

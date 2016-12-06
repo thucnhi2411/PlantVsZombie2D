@@ -28,12 +28,19 @@ public class Peashooter extends GCompound implements Runnable
         add(peashooter, -80/2, -80/2);
     }
     
+    
     /** the run method */
     public void run() {
-        while (isAlive) {
-            return;
+        while (isAlive && game.getGameOver() == false) {
+            oneTimeStep();
+            pause(DELAY);
         }
         disappear();
+    }
+    
+    public void oneTimeStep(){
+        game.checkCollision(this);
+        game.createPea(this);
     }
     
     /** kill the peashooter */
@@ -44,7 +51,6 @@ public class Peashooter extends GCompound implements Runnable
     public boolean isAlive() {
         return isAlive;
     }
-    
     
     // the peashooter disappears
     private void disappear() {

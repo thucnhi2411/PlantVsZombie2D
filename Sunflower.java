@@ -10,10 +10,11 @@ import java.awt.*;
 public class Sunflower extends GCompound implements Runnable
 {
     // constants
-    private static final double DELAY = 500;
+    private static final double DELAY = 3000;
     // instance variables 
     private PlantVsZombie game; // the main game
     private boolean isAlive = true;
+    private int lifeSpan; 
     /**
      * Constructor for objects of class Sunflower
      */
@@ -21,7 +22,7 @@ public class Sunflower extends GCompound implements Runnable
     {
         // save the paramerters in instance variables
         this.game = game;
-        
+        lifeSpan = 4;
         // create the sub flower, centered at the local origin
         GImage sunflower = new GImage("sunflower.gif");
         sunflower.setSize(80,80);
@@ -30,21 +31,25 @@ public class Sunflower extends GCompound implements Runnable
     
     /** the run method */
     public void run() {
-        while (isAlive) {
-            return;
+        while (isAlive && game.getGameOver() == false) {
+            oneTimeStep();
+            pause(DELAY);
         }
         disappear();
     }
     
+    public void oneTimeStep(){
+        game.checkCollision(this);
+        game.createSun(this);
+    }
     /** kill the sunflower */
     public void die() {
-        isAlive = false;
+       isAlive = false;
     }
     
     public boolean isAlive() {
         return isAlive;
     }
-    
     
     // the sunflower disappears
     private void disappear() {

@@ -24,9 +24,12 @@ public class PlantVsZombie extends GraphicsProgram
     private GImage peashooterChoice; // the choice of peashooter
     private GPoint lastPoint;
     private boolean 
-    sunflowerDragged = false,
-    peashooterDragged = false;
-
+        sunflowerDragged = false,
+        peashooterDragged = false;
+    private Zombie[] zombie = new Zombie[30]; // the array of zombie
+    private RandomGenerator rand = RandomGenerator.getInstance(); //the random generator
+    private boolean gameOver = false; // whether the game is over
+        
     public void init(){
         drawGraphics();
 
@@ -106,7 +109,67 @@ public class PlantVsZombie extends GraphicsProgram
         }
 
     }
-
+   
+    /** check collision of the sunflower*/
+    public void checkCollision(Sunflower sunflower){
+        // check if the zombie hit the sunflower
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<1000 && zombie[i].getBounds().intersects(sunflower.getBounds())){
+                sunflower.die();
+            }
+        }
+    }
+    
+    /** check collision of the peashooter*/
+    public void checkCollision(Peashooter peashooter){
+        // check if the zombie hit the peashooter
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<1000 && zombie[i].getBounds().intersects(peashooter.getBounds())){
+                peashooter.die();
+            }
+        }
+    }
+    
+    /** check collision of the zombie */
+    public void checkCollision(Zombie zombie){
+        double x = zombie.getX();
+        double y = zombie.getY();
+        // check if the zombie hit the left wall
+        if (x-zombie.getWidth()/2<0) {
+            gameOver();
+        }
+    }
+    
+    /** check collision of the pea*/
+    public void checkCollision(Pea pea){
+        // check if the pea hit the zombie
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<1000 && pea.getBounds().intersects(zombie[i].getBounds())){
+                zombie[i].decreaseLives();
+                zombie[i].setLocation(getWidth()+500,zombie[i].getY()); // the zombie is killed
+                pea.die();
+            }
+        }
+       
+    }
+    
+    public void createSun(Sunflower sunflower){
+        Sun sun = new Sun(this);
+        add(sun,sunflower.getX(),sunflower.getY());
+        new Thread(sun).start();
+        increaseSun();
+        pause(3000);
+    }
+    
+    public void createPea(Peashooter peashooter){
+        Pea pea = new Pea(this);
+        add(pea,peashooter.getX(),peashooter.getY());
+        new Thread(pea).start();
+        pause(1800);
+    }
     // increase the sun
     public void increaseSun(){
         sun++;
@@ -153,10 +216,17 @@ public class PlantVsZombie extends GraphicsProgram
         peashooterChoice = new GImage("peashooter.gif");
         peashooterChoice.setSize(80,80);
         add(peashooterChoice,270,50);
+        
+        // add the zombie
+        for (int i = 0; i<30; i++){
+            boolean stronger = false;
+            if (i%3==0) stronger = true;
+            zombie[i] = new Zombie(2,180,stronger,this);
+            add(zombie[i],rand.nextDouble(getWidth()+300,getWidth()*3),210+ (i/6)*100);
+            if (stronger == true) zombie[i].stronger();
+            new Thread(zombie[i]).start();
+        }
 
-        GImage zombie = new GImage("zombie.gif");
-        zombie.setSize(80,80);
-        add(zombie,370,50);
     }
 
     // draw the choice of plants
@@ -189,5 +259,30 @@ public class PlantVsZombie extends GraphicsProgram
             }
 
         }
+    }
+    
+    public boolean getGameOver(){
+        return gameOver;
+    }
+    
+    /** The gameOver method when the game is Over */
+    private void gameOver(){
+        
+        gameOver = true;
+        // stop the zombie
+        for (int i = 0;i<30;i++){
+            zombie[i].stopMoving(); 
+        }
+        
+        GRect blackscreen = new GRect(1000,720);
+        blackscreen.setFilled(true);
+        blackscreen.setColor(Color.BLACK);
+        add(blackscreen,0,0);
+        
+        // the label that appears when the game is over
+        GImage gameOverImage = new GImage("gameOver.png");
+        gameOverImage.setSize(1000,720);
+        add(gameOverImage,0,0);
+        
     }
 }
