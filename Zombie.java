@@ -19,6 +19,7 @@ public class Zombie extends GCompound implements Runnable {
     private String name; // the name of different zombie
     private boolean stopMoving = false; // whether the zombies are moving
     private int lives; // the lives of zombie
+    private boolean hypnotized = false; // whether the zombie is hypnotized
 
     /** the constructor, create the zombie */
     public Zombie(double speed, 
@@ -78,6 +79,7 @@ public class Zombie extends GCompound implements Runnable {
     // decrease lives of zombie
     public void decreaseLives(){
         lives--;
+        if (lives == 0) game.zombieDead();
     }
 
     // stop the zombies when the game is over
@@ -85,10 +87,36 @@ public class Zombie extends GCompound implements Runnable {
         stopMoving = true;
     }
 
+    /** return the angle of movement */
+    public double getAngle() {
+        return angle;
+    }
+    
+    /** change the angle of movement when bounce */
+    public void setAngle(double angle) {
+        this.angle = 180-angle;
+    }
+    
+    /** zombie is hypnotized */
+    public void hypnotized(){
+        hypnotized = true;
+        this.angle = 180 - angle;
+    }
+    
+    /** zombie is not hypnotized */
+    public void notHypnotized(){
+        hypnotized = false;
+    }
+    
+    /** whether the zombie is hypnotized */
+    public boolean isHypnotized(){
+        return hypnotized;
+    }
+    
     // in each time step, move the zombie and check the collision
     private void oneTimeStep() {
         movePolar(speed, angle);
         game.checkCollision(this);
     }
-
+    
 }

@@ -1,49 +1,42 @@
 import acm.program.*;
 import acm.graphics.*;
 import java.awt.*;
-
 /**
- * Sunflower.java
+ * Bomb.java.
  * 
- * A class for the sunflower that creates the sun
+ * A class for the Bomb
  */
-public class Sunflower extends GCompound implements Runnable
+public class Bomb extends GCompound implements Runnable 
 {
     // constants
-    private static final double DELAY = 3000;
+    private static final double DELAY = 50;
     // instance variables 
     private PlantVsZombie game; // the main game
     private boolean isAlive = true;
-    private int lifeSpan; 
+
     /**
-     * Constructor for objects of class Sunflower
+     * Constructor for objects of class Bomb
      */
-    public Sunflower(PlantVsZombie game)
+    public Bomb(PlantVsZombie game)
     {
         // save the paramerters in instance variables
         this.game = game;
-        lifeSpan = 4;
+
         // create the sub flower, centered at the local origin
-        GImage sunflower = new GImage("sunflower.gif");
-        sunflower.setSize(80,80);
-        add(sunflower, -80/2, -80/2);
+        GImage bomb = new GImage("bomb.png");
+        bomb.setSize(80,80);
+        add(bomb, -80/2, -80/2);
     }
 
     /** the run method */
     public void run() {
         while (isAlive && game.getGameOver() == false) {
-            oneTimeStep();
+            game.checkCollision(this);
         }
         disappear();
     }
 
-    // control the animation
-    public void oneTimeStep(){
-        game.checkCollision(this);
-        game.createSun(this);
-    }
-
-    /** kill the sunflower */
+    /** kill the bomb */
     public void die() {
         isAlive = false;
     }
@@ -53,8 +46,17 @@ public class Sunflower extends GCompound implements Runnable
         return isAlive;
     }
 
-    // the sunflower disappears
+    // the bomb disappears
     private void disappear() {
+        // show explosion and disappear
+        removeAll(); // remove the bomb
+        // draw an explosion
+        GImage explosion = new GImage("bigexplosion.gif");
+        explosion.setSize(100, 100);
+        add(explosion, -100/2, -100/2);
+        pause(500);
         removeAll();
+    
     }
 }
+

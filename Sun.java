@@ -37,5 +37,6 @@ public class Sun extends GCompound implements Runnable
     // control the animation
     private void oneTimeStep(){
         movePolar(30,90);
+        game.outOfScreen(this);
     }
 }

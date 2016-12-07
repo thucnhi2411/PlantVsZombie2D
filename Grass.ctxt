@@ -1,6 +1,6 @@
 #BlueJ class context
-comment0.params=size\ row\ col\ darker\ game
-comment0.target=Grass(double,\ int,\ int,\ boolean,\ PlantVsZombie)
+comment0.params=row\ col\ darker\ game
+comment0.target=Grass(int,\ int,\ boolean,\ PlantVsZombie)
 comment0.text=The\ constructor\ creates\ the\ grass\ cell
 comment1.params=
 comment1.target=void\ changeColor()

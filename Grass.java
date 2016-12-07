@@ -6,7 +6,6 @@ import java.awt.*;
  */
 public class Grass extends GCompound {
     // instance variables:
-    double size = 100; // the size of one cell of grass
     int row; // the row of the cell;
     int col; // the column of the cell;
     PlantVsZombie game; // the main game
@@ -15,14 +14,13 @@ public class Grass extends GCompound {
     GRect grass;
 
     /** The constructor creates the grass cell */
-    public Grass(double size, int row, int col, boolean darker, PlantVsZombie game){
-        this.size = size;
+    public Grass(int row, int col, boolean darker, PlantVsZombie game){
         this.row = row;
         this.col = col;
         this.darker = darker;
         this.game = game;
 
-        grass = new GRect(size,size);
+        grass = new GRect(100,100);
         grass.setFilled(true);
         grass.setFillColor(new Color(196, 249, 126));
         add(grass);
