@@ -115,8 +115,12 @@ public class Zombie extends GCompound implements Runnable {
     
     // in each time step, move the zombie and check the collision
     private void oneTimeStep() {
-        movePolar(speed, angle);
-        game.checkCollision(this);
+        if (game.checkFill()>=0) {
+            movePolar(speed, angle);
+            game.checkCollision(this);
+        } else {
+            movePolar(speed, angle);
+        }
     }
     
 }
