@@ -1,7 +1,7 @@
 #BlueJ class context
 comment0.params=speed\ angle\ stronger\ game
 comment0.target=Zombie(double,\ double,\ boolean,\ PlantVsZombie)
-comment0.text=the\ constructor,\ create\ the\ zombie
+comment0.text=\ \n\ The\ constructor,\ create\ the\ zombie\n\ @param\ \ \ speed\ \ \ \ the\ speed\ of\ the\ zombie\n\ @param\ \ \ angle\ \ \ \ the\ angle\ of\ the\ zombie\n\ @param\ \ \ stronger\ whether\ the\ zombie\ is\ stronger\n\ @param\ \ \ game\ \ \ \ \ the\ game\ PlantVsZombie\n
 comment1.params=
 comment1.target=boolean\ isStronger()
 comment10.params=

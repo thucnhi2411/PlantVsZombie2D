@@ -1,7 +1,7 @@
 import acm.program.*;
 import acm.graphics.*;
 import java.awt.*;
-/*
+/**
  * The class to control the plantChoice
  */
 public class PlantChoice extends GCompound implements Runnable{
@@ -11,11 +11,15 @@ public class PlantChoice extends GCompound implements Runnable{
     boolean draggable = false;
     GRect plantChoice;
 
-    /** The constructor creates the plantChoice cell */
+    /** 
+     * The constructor creates the plantChoice cell 
+     * @param   draggable   the boolean checking whether the choice is draggable
+     * @param   game        the game PlantVsZombie
+     */
     public PlantChoice(boolean draggable, PlantVsZombie game){
         this.draggable = draggable;
         this.game = game;
-
+        // add the plant choice
         plantChoice = new GRect(100,140);
         plantChoice.setFilled(true);
         plantChoice.setFillColor(new Color(225, 225, 208));
@@ -35,11 +39,12 @@ public class PlantChoice extends GCompound implements Runnable{
     public void setDraggable(){
         draggable = true;
     }
-    
+
+    /** Set not draggable */
     public void notDraggable(){
         draggable = false;
     }
-    
+
     /** The run method */
     public void run(){
         while(true){

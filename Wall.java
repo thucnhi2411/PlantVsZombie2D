@@ -2,11 +2,11 @@ import acm.program.*;
 import acm.graphics.*;
 import java.awt.*;
 /**
- * Bomb.java.
+ * Wall.java.
  * 
- * A class for the Bomb
+ * A class for the Wall that pauses the zombie.
  */
-public class Bomb extends GCompound implements Runnable 
+public class Wall extends GCompound implements Runnable 
 {
     // constants
     private static final double DELAY = 50;
@@ -15,29 +15,35 @@ public class Bomb extends GCompound implements Runnable
     private boolean isAlive = true;
 
     /**
-     * Constructor for objects of class Bomb
+     * Constructor for objects of class Wall
      * @param   game    the game PlantVsZombie
      */
-    public Bomb(PlantVsZombie game)
+    public Wall(PlantVsZombie game)
     {
         // save the paramerters in instance variables
         this.game = game;
 
         // create the sub flower, centered at the local origin
-        GImage bomb = new GImage("bomb.png");
-        bomb.setSize(80,80);
-        add(bomb, -80/2, -80/2);
+        GImage wall = new GImage("wall.png");
+        wall.setSize(80,80);
+        add(wall, -80/2, -80/2);
     }
 
     /** the run method */
     public void run() {
         while (isAlive && game.getGameOver() == false) {
-            game.checkCollision(this);
+            oneTimeStep();
+            pause(DELAY);
         }
         disappear();
     }
+    
+    // control the animation
+    public void oneTimeStep(){
+        game.checkCollision(this);
+    }
 
-    /** kill the bomb */
+    /** kill the wall */
     public void die() {
         isAlive = false;
     }
@@ -47,17 +53,8 @@ public class Bomb extends GCompound implements Runnable
         return isAlive;
     }
 
-    // the bomb disappears
+    // the wall disappears
     private void disappear() {
-        // show explosion and disappear
-        removeAll(); // remove the bomb
-        // draw an explosion
-        GImage explosion = new GImage("bigexplosion.gif");
-        explosion.setSize(100, 100);
-        add(explosion, -100/2, -100/2);
-        pause(500);
         removeAll();
-
     }
 }
-

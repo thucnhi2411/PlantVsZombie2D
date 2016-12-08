@@ -4,10 +4,19 @@ import acm.util.*;
 import java.awt.*;
 import java.util.*;
 /**
- * Write a description of class PlantVsZombie here.
+ * The PlantVsZombie game.
+ * 
+ * Description: The game starts with 8x5 grid of grass, 5 choices of plants, 50 suns. Different numbers of suns
+ * allow player to drag different types of plants to prevent the zombies from entering the house. The suns are
+ * by the sunflower. One sunflower creates 25 suns every 5 seconds. The peashooter creates the pea that can kill
+ * the zombie. The wall pauses the movement of zombie in 3 seconds. The bomb kills all the zombies that are in the 
+ * grid of grass. The hypnoshroom which is the mushroom that can hypnotize the zombie makes the zombie move the
+ * opposite way out of the screen. When the zombie hits the sunflower or the peashooter, the sunflower and the 
+ * peashooter will disappear. The wall, the bomb and the hypnoshroom will disappear after affecting the zombie. When
+ * the zombie hits the lawn mower, the lawn mower will move and kill all the zombies and the plants on the same
+ * row. When the zombie reaches the house, the game is over. When all the zombies are killed, the player wins. 
  * 
  * Thuc Nhi Le
- * @version (a version number or a date)
  */
 public class PlantVsZombie extends GraphicsProgram
 {
@@ -17,8 +26,9 @@ public class PlantVsZombie extends GraphicsProgram
     APPLICATION_HEIGHT = 720;   
 
     // instance variables
-    Plant[] plant = new Plant[250];
-    private int fill=0;
+    private Plant[] plant = new Plant[100]; // the array of sunflower and peashooter
+    private Lawnmower[] lawnmower = new Lawnmower[5]; // the array of lawn mower
+    private int fill=0; // whether the array of plant is filled
     Grass[][] grass = new Grass[5][8]; // array of grass
     PlantChoice[] plantChoice = new PlantChoice[5]; // array of plant choice
     private int sun = 50; // the number of sun
@@ -30,39 +40,42 @@ public class PlantVsZombie extends GraphicsProgram
     private GImage hypnoshroomChoice; // the choice of mushroom that can hypnotize
     private GPoint lastPoint; // last point
     private boolean 
-    sunflowerDragged = false, // whether sunflower is dragged
-    peashooterDragged = false, // whether peashooter is dragged
-    wallDragged = false, // whether wall is dragged
-    bombDragged = false, // whether bomb is dragged
-    hypnoshroomDragged = false;
+        sunflowerDragged = false, // whether sunflower is dragged
+        peashooterDragged = false, // whether peashooter is dragged
+        wallDragged = false, // whether wall is dragged
+        bombDragged = false, // whether bomb is dragged
+        hypnoshroomDragged = false; // whether the hypnoshroom is dragged
     private Zombie[] zombie = new Zombie[30]; // the array of zombie
     private RandomGenerator rand = RandomGenerator.getInstance(); //the random generator
     private boolean gameOver = false; // whether the game is over
-    private int zombieDead = 0;
-    private GRect wonblackscreen, lostblackscreen;
-    private GImage gameOverImage, winlabel;
+    private int zombieDead = 0; // the number of dead zombie 
+    private GRect wonblackscreen, lostblackscreen; // the black screen when the game is over (win/lose)
+    private GImage gameOverImage, winlabel; // the label when the game is over (lose/win)
 
     /** the init method */
     public void init(){
         drawGraphics(); // draw the graphics
     }
 
-    /** start dragging if the object is pressed on */
+    /** 
+     * The mousePressed starts dragging if the object is pressed on 
+     * @param   point   the location of the mouse
+     */
     public void mousePressed(GPoint point){
-        if (gameOver == true) {
-            return;
-        } else {
-            // if the object is pressed, set the boolean value to true
-            if (sunflowerChoice.contains(point) && sun>=50) sunflowerDragged = true;
-            if (peashooterChoice.contains(point) && sun >= 75) peashooterDragged = true;
-            if (wallChoice.contains(point) && sun >= 100) wallDragged = true;
-            if (bombChoice.contains(point) && sun >= 200) bombDragged = true;
-            if (hypnoshroomChoice.contains(point) && sun >= 250) hypnoshroomDragged = true;
-            lastPoint = point;
-        }
+        // if the object is pressed, set the boolean value to true
+        if (sunflowerChoice.contains(point) && sun>=50) sunflowerDragged = true;
+        if (peashooterChoice.contains(point) && sun >= 75) peashooterDragged = true;
+        if (wallChoice.contains(point) && sun >= 100) wallDragged = true;
+        if (bombChoice.contains(point)) bombDragged = true;
+        if (hypnoshroomChoice.contains(point) && sun >= 250) hypnoshroomDragged = true;
+        lastPoint = point;
+
     }
 
-    /** move the object when it is dragged */
+    /** 
+     * Move the object when it is dragged
+     * @param   point   the location of the mouse
+     */
     public void mouseDragged(GPoint point){
         // if sunflower is dragged
         if (sunflowerDragged){
@@ -93,7 +106,10 @@ public class PlantVsZombie extends GraphicsProgram
         lastPoint = point;
     }
 
-    /** stop dragging */
+    /** 
+     * Stop dragging
+     * @param   point   the location of the mouse
+     */
     public void mouseReleased(GPoint point) {
         double x = point.getX(); // the x location of the mouse
         double y = point.getY(); // the y location of the mouse
@@ -121,9 +137,8 @@ public class PlantVsZombie extends GraphicsProgram
                 sunflowerChoice.setLocation(170,50);
                 sunflowerDragged = false;
             } else {
-                sun = sun - 50;
+                sun = sun - 50; // reduce the sun
                 sunNumber.setLabel(sun+"");
-                
                 // create the sunflower if the mouse is released in the grid
                 plant[fill] = new Plant("sunflower",this);
                 add(plant[fill],xLocation,yLocation);
@@ -144,9 +159,8 @@ public class PlantVsZombie extends GraphicsProgram
                 peashooterChoice.setLocation(270,50);
                 peashooterDragged = false;
             } else {
-                sun = sun - 75;
+                sun = sun - 75; // reduce the sun
                 sunNumber.setLabel(sun+"");
-                
                 // create the peashooter if the mouse is released in the grid
                 plant[fill] = new Plant("peashooter",this);
                 add(plant[fill],xLocation,yLocation);
@@ -167,14 +181,12 @@ public class PlantVsZombie extends GraphicsProgram
                 wallChoice.setLocation(370,50);
                 wallDragged = false;
             } else {
-                sun = sun -100;
+                sun = sun -100;// reduce the sun
                 sunNumber.setLabel(sun+"");
-                
                 // create the wall if the mouse is released in the grid
-                plant[fill] = new Plant("wall",this);
-                add(plant[fill],xLocation,yLocation);
-                new Thread(plant[fill]).start();
-                fill++;
+                Wall wall = new Wall(this);
+                add(wall,xLocation,yLocation);
+                new Thread(wall).start();
                 wallChoice.setLocation(370,50);
                 // set the grass to filled status
                 grass[row][col].fill();
@@ -190,7 +202,7 @@ public class PlantVsZombie extends GraphicsProgram
                 bombChoice.setLocation(470,50);
                 bombDragged = false;
             } else {
-                sun = sun - 200;
+                sun = sun - 200;// reduce the sun
                 sunNumber.setLabel(sun+"");
                 // create the bomb if the mouse is released in the grid
                 Bomb bomb = new Bomb(this);
@@ -199,7 +211,6 @@ public class PlantVsZombie extends GraphicsProgram
                 bombChoice.setLocation(470,50);
                 // set the grass to filled status
                 grass[row][col].fill();
-                setVacant(bomb.getX(),bomb.getY()); //set the grass to vacant status
                 // stop dragging 
                 bombDragged = false;
             }
@@ -214,25 +225,60 @@ public class PlantVsZombie extends GraphicsProgram
             } else {
                 sun = sun - 200;
                 sunNumber.setLabel(sun+"");
-                
                 // create the hypnoshroom if the mouse is released in the grid
-                plant[fill] = new Plant("hypnoshroom",this);
-                add(plant[fill],xLocation,yLocation);
-                new Thread(plant[fill]).start();
-                fill++;
+                Hypnoshroom hypnoshroom = new Hypnoshroom(this);
+                add(hypnoshroom,xLocation,yLocation);
+                new Thread(hypnoshroom).start();
                 hypnoshroomChoice.setLocation(570,50);
                 // set the grass to filled status
                 grass[row][col].fill();
-                setVacant(plant[fill].getX(),plant[fill].getY()); //set the grass to vacant status
+                setVacant(hypnoshroom.getX(),hypnoshroom.getY()); //set the grass to vacant status
                 // stop dragging 
                 hypnoshroomDragged = false;
             }
         }
     }
 
-    
+    /** 
+     * Check collision of the wall
+     * @param   wall    the object of the Wall class
+     */ 
+    public void checkCollision(Wall wall){
+        // check if the zombie hit the wall
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<980 && zombie[i].getBounds().intersects(wall.getBounds())){
+                zombie[i].pause(); // pause the zombie
+                // after pausing the zombie, kill the wall and set the grass to vacant status
+                if (zombie[i].getResume() == true) {
+                    wall.die();
+                    setVacant(wall.getX(), wall.getY());
+                }
+            }
+        }
+    }
 
-    /** when the bomb is set */
+    /** 
+     * Check collision of the hypnoshroom
+     * @param   hypnoshroom     the object of the Hypnoshroom class
+     */
+    public void checkCollision(Hypnoshroom hypnoshroom){
+        // check if the zombie hit the hypnoshroom
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<980 && zombie[i].isHypnotized()==false 
+            && zombie[i].getBounds().intersects(hypnoshroom.getBounds())){
+                hypnoshroom.die(); // the hypnoshroom disappears
+                zombie[i].hypnotized();
+                setVacant(hypnoshroom.getX(),hypnoshroom.getY()); 
+            }
+        }
+    }
+
+    /** 
+     * The bomb is launched
+     * @param   bomb    the object of the Bomb class
+     */
     public void checkCollision(Bomb bomb){
         for (int i=0; i<30; i++){
             double xZombie = zombie[i].getX();
@@ -242,18 +288,24 @@ public class PlantVsZombie extends GraphicsProgram
                 zombie[i].decreaseLives();
                 zombie[i].setLocation(getWidth()+rand.nextDouble(300,800),yZombie); // the zombie is killed
                 bomb.die();
+                setVacant(bomb.getX(),bomb.getY()); 
             } else {
                 bomb.die();
+                setVacant(bomb.getX(),bomb.getY()); 
             }
 
         }
     }
-    
+
+    /** Whether the array of plant is filled*/
     public int checkFill(){
         return fill;
     }
 
-    /** check collision of the zombie */
+    /** 
+     * Check collision of the zombie
+     * @param   zombie  the object of the Zombie class
+     */
     public void checkCollision(Zombie zombie){
         double x = zombie.getX();
         double y = zombie.getY();
@@ -261,23 +313,24 @@ public class PlantVsZombie extends GraphicsProgram
         if (x-zombie.getWidth()/2<20) {
             gameOver();
         }
+        // check if the zombie is hypnotized and out of the screen
         if (zombie.isHypnotized()==true && zombie.getX()>1000) {
-            zombie.setAngle(zombie.getAngle());
-            zombie.notHypnotized();
+            zombie.setAngle(zombie.getAngle()); // change the angle
+            zombie.notHypnotized(); // set it not hypnotized
         }
-        if (fill >= 0) {
-            for (int i = 0; i<=fill; i++){
-                if (zombie.getBounds().intersects(plant[i].getBounds())){
-                    plant[i].setVisible(false);
-                    setVacant(plant[i].getX(),plant[i].getY()); 
-                    
-                }
+        // check if the zombie hits the sunflower or the peashooter
+        for (int i = 0; i< fill; i++){
+            if (zombie.getBounds().intersects(plant[i].getBounds())){
+                plant[i].die();
+                setVacant(plant[i].getX(),plant[i].getY()); 
             }
         }
-        
     }
 
-    /** check collision of the pea*/
+    /** 
+     * Check collision of the pea
+     * @param   pea     the object of the Pea class
+     */
     public void checkCollision(Pea pea){
         // check if the pea hit the zombie
         for (int i=0; i<30; i++){
@@ -288,10 +341,39 @@ public class PlantVsZombie extends GraphicsProgram
                 pea.die(); // the pea disappears
             }
         }
-        if (pea.getX()>1000) pea.die();
+        if (pea.getX()>1000) pea.die(); // out of screen
     }
 
-    // find the vacant grass cell 
+    /** 
+     * Check collision of the lawnmower
+     * @param   lawnmower   the object of the Lawnmower class
+     */
+    public void checkCollision(Lawnmower lawnmower){
+        // when the lawnmower hits the zombie
+        for (int i=0; i<30; i++){
+            // if the zombie is in the screen
+            if (zombie[i].getX()<980 && lawnmower.getBounds().intersects(zombie[i].getBounds())){
+                lawnmower.moving();
+                zombie[i].decreaseLives();
+                zombie[i].setLocation(getWidth()+rand.nextDouble(300,800),zombie[i].getY()); // the zombie is killed
+            }
+        }
+        // whether the lawn mower hits the plant
+        for (int i = 0; i< fill; i++){
+            if (lawnmower.getBounds().intersects(plant[i].getBounds())){
+                plant[i].die();
+                setVacant(plant[i].getX(),plant[i].getY()); 
+            }
+        }
+        // out of screen
+        if (lawnmower.getX()>getWidth()) lawnmower.die();
+    }
+
+    /** 
+     * Set the grass cell vacant
+     * @param   x   the x location of the plant
+     * @param   y   the y location of the plant
+     */
     private void setVacant(double x,double y){
         int col = 0; // the column of the grass cell
         int row = 0; // the row of the grass cell
@@ -308,7 +390,10 @@ public class PlantVsZombie extends GraphicsProgram
         grass[row][col].vacant();
     }
 
-    // create the sun and animation
+    /** 
+     * Create the sun and animate it
+     * @param   plant   the plant that creates the sun
+     */
     public void createSun(Plant plant){
         Sun sun = new Sun(this);
         add(sun,plant.getX(),plant.getY());
@@ -317,7 +402,10 @@ public class PlantVsZombie extends GraphicsProgram
         pause(3000);
     }
 
-    // create the pea and animation
+    /** 
+     * Create the pea and animate it
+     * @param   plant   the plant that creates the pea
+     */
     public void createPea(Plant plant){
         Pea pea = new Pea(this);
         add(pea,plant.getX(),plant.getY());
@@ -325,12 +413,16 @@ public class PlantVsZombie extends GraphicsProgram
         pause(2500);
     }
 
-    // when the sun flies out of the screen
+    /** 
+     * Remove the sun if it is out of screen
+     * @param   sun     the object of the Sun class
+     */
     public void outOfScreen(Sun sun){
         if (sun.getY()<0) sun.removeAll();
     }
+
     // increase the sun
-    public void increaseSun(){
+    private void increaseSun(){
         sun = sun + 25;
         sunNumber.setLabel(sun+"");
     }
@@ -350,7 +442,7 @@ public class PlantVsZombie extends GraphicsProgram
         houseLabel.setSize(40,500);
         add(houseLabel,15,200);
 
-        // draw the 6 choices of plant
+        // draw the 5 choices of plant
         drawPlantChoice();
 
         // draw the board showing the sun acquired
@@ -372,7 +464,7 @@ public class PlantVsZombie extends GraphicsProgram
         sunflowerChoice = new GImage("sunflower.gif");
         sunflowerChoice.setSize(80,80);
         add(sunflowerChoice,170,50);
-        
+
         GLabel flowerCost = new GLabel("50");
         flowerCost.setFont(new Font("Sanserif", Font.BOLD, 20));
         flowerCost.setColor(Color.BLACK);
@@ -382,12 +474,12 @@ public class PlantVsZombie extends GraphicsProgram
         peashooterChoice = new GImage("peashooter.gif");
         peashooterChoice.setSize(80,80);
         add(peashooterChoice,270,50);
-        
+
         GLabel peashooterCost = new GLabel("75");
         peashooterCost.setFont(new Font("Sanserif", Font.BOLD, 20));
         peashooterCost.setColor(Color.BLACK);
         add(peashooterCost,295,160);
-        
+
         // draw the wall choice and label
         wallChoice = new GImage("wall.png");
         wallChoice.setSize(80,80);
@@ -397,12 +489,12 @@ public class PlantVsZombie extends GraphicsProgram
         wallCost.setFont(new Font("Sanserif", Font.BOLD, 20));
         wallCost.setColor(Color.BLACK);
         add(wallCost,390,160);
-        
+
         // draw the bomb choice
         bombChoice = new GImage("bomb.png");
         bombChoice.setSize(80,80);
         add(bombChoice,470,50);
-        
+
         GLabel bombCost = new GLabel("200");
         bombCost.setFont(new Font("Sanserif", Font.BOLD, 20));
         bombCost.setColor(Color.BLACK);
@@ -412,7 +504,7 @@ public class PlantVsZombie extends GraphicsProgram
         hypnoshroomChoice = new GImage("hypnoshroom.png");
         hypnoshroomChoice.setSize(80,80);
         add(hypnoshroomChoice,570,50);
-        
+
         GLabel hypnoshroomCost = new GLabel("250");
         hypnoshroomCost.setFont(new Font("Sanserif", Font.BOLD, 20));
         hypnoshroomCost.setColor(Color.BLACK);
@@ -428,6 +520,12 @@ public class PlantVsZombie extends GraphicsProgram
             new Thread(zombie[i]).start();
         }
 
+        // add the lawnmower
+        for (int i = 0; i<5; i++){
+            lawnmower[i] = new Lawnmower(this);
+            add(lawnmower[i],100,100*i+240);
+            new Thread(lawnmower[i]).start();
+        }
     }
 
     // draw the 5 choices of plants
@@ -438,9 +536,9 @@ public class PlantVsZombie extends GraphicsProgram
             add(plantChoice[i],160 + i*100,40);
             new Thread(plantChoice[i]).start();
         }
-        
+
     }
-    
+
     // Check if the plant choice is draggable
     public void checkDraggable(){
         for (int i = 0; i<5; i++){
@@ -510,13 +608,13 @@ public class PlantVsZombie extends GraphicsProgram
         add(gameOverImage,0,0);
 
     }
-    
+
     /** Count the number of dead zombie */
     public void zombieDead(){
         zombieDead++;
         if (zombieDead == 30) win();
     }
-    
+
     /** When the player win*/
     public void win(){
         gameOver = true;
@@ -532,5 +630,5 @@ public class PlantVsZombie extends GraphicsProgram
         add(winlabel,0,0);
 
     }
-  
+
 }

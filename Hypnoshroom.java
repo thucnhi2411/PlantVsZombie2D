@@ -2,11 +2,11 @@ import acm.program.*;
 import acm.graphics.*;
 import java.awt.*;
 /**
- * Bomb.java.
+ * Hypnoshroom.java.
  * 
- * A class for the Bomb
+ * A class for the Hypnoshroom. This is the mushroom that can hypnotize.
  */
-public class Bomb extends GCompound implements Runnable 
+public class Hypnoshroom extends GCompound implements Runnable 
 {
     // constants
     private static final double DELAY = 50;
@@ -15,18 +15,18 @@ public class Bomb extends GCompound implements Runnable
     private boolean isAlive = true;
 
     /**
-     * Constructor for objects of class Bomb
+     * Constructor for objects of class Hypnoshroom
      * @param   game    the game PlantVsZombie
      */
-    public Bomb(PlantVsZombie game)
+    public Hypnoshroom(PlantVsZombie game)
     {
         // save the paramerters in instance variables
         this.game = game;
 
         // create the sub flower, centered at the local origin
-        GImage bomb = new GImage("bomb.png");
-        bomb.setSize(80,80);
-        add(bomb, -80/2, -80/2);
+        GImage hypnoshroom = new GImage("hypnoshroom.png");
+        hypnoshroom.setSize(80,80);
+        add(hypnoshroom, -80/2, -80/2);
     }
 
     /** the run method */
@@ -37,7 +37,7 @@ public class Bomb extends GCompound implements Runnable
         disappear();
     }
 
-    /** kill the bomb */
+    /** kill the hypnoshroom */
     public void die() {
         isAlive = false;
     }
@@ -47,17 +47,8 @@ public class Bomb extends GCompound implements Runnable
         return isAlive;
     }
 
-    // the bomb disappears
+    // the hypnoshroom disappears
     private void disappear() {
-        // show explosion and disappear
-        removeAll(); // remove the bomb
-        // draw an explosion
-        GImage explosion = new GImage("bigexplosion.gif");
-        explosion.setSize(100, 100);
-        add(explosion, -100/2, -100/2);
-        pause(500);
-        removeAll();
-
+        removeAll(); // remove the hypnoshroom
     }
 }
-

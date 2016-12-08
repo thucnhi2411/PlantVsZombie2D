@@ -5,15 +5,16 @@ import java.awt.*;
 /**
  * Zombie.java <p>
  * 
- * A class for zombie. <p>
+ * A class for zombie. There are two types of zombies. One type moves faster and has 3 lives. The stronger one moves
+ * more slowly and has 5 lives.<p>
  */
 public class Zombie extends GCompound implements Runnable {
     // constants
     private static final double DELAY = 20;
     // instance variables
     private PlantVsZombie game; // the main game
-    private boolean pause = false; // pause
-    private boolean resume = false; // resume
+    private boolean pause = false; // pause the zombie
+    private boolean resume = false; // resume the movement of the zombie
     private double speed, angle; // the speed and the angle
     private boolean stronger = false; // whether the zombie is speedy zombie
     private String name; // the name of different zombie
@@ -21,9 +22,15 @@ public class Zombie extends GCompound implements Runnable {
     private int lives; // the lives of zombie
     private boolean hypnotized = false; // whether the zombie is hypnotized
 
-    /** the constructor, create the zombie */
-    public Zombie(double speed, 
-    double angle, boolean stronger, PlantVsZombie game) {
+    /** 
+     * The constructor, create the zombie
+     * @param   speed    the speed of the zombie
+     * @param   angle    the angle of the zombie
+     * @param   stronger whether the zombie is stronger
+     * @param   game     the game PlantVsZombie
+     */
+    public Zombie(double speed, double angle, boolean stronger, PlantVsZombie game) {
+
         // save the parameters in instance variables
         this.game = game;
         this.speed = speed;
@@ -43,10 +50,12 @@ public class Zombie extends GCompound implements Runnable {
         add(zombie, -90/2, -90/2); 
     }
 
+    // whether the zombie is stronger
     public boolean isStronger(){
         return stronger;
     }
-    // set the speed of the speedy zombies faster
+
+    // set the speed of the stronger zombies lower and increases their number of lives
     public void stronger(){
         speed = speed*0.75;
         lives = 5;
@@ -91,28 +100,28 @@ public class Zombie extends GCompound implements Runnable {
     public double getAngle() {
         return angle;
     }
-    
+
     /** change the angle of movement when bounce */
     public void setAngle(double angle) {
         this.angle = 180-angle;
     }
-    
+
     /** zombie is hypnotized */
     public void hypnotized(){
         hypnotized = true;
         this.angle = 180 - angle;
     }
-    
+
     /** zombie is not hypnotized */
     public void notHypnotized(){
         hypnotized = false;
     }
-    
+
     /** whether the zombie is hypnotized */
     public boolean isHypnotized(){
         return hypnotized;
     }
-    
+
     // in each time step, move the zombie and check the collision
     private void oneTimeStep() {
         if (game.checkFill()>=0) {
@@ -122,5 +131,5 @@ public class Zombie extends GCompound implements Runnable {
             movePolar(speed, angle);
         }
     }
-    
+
 }

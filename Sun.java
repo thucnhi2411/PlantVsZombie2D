@@ -4,7 +4,7 @@ import java.awt.*;
 /**
  * Sun.java.
  * 
- * A class for the sun
+ * A class for the sun that is created by the sunflower
  */
 public class Sun extends GCompound implements Runnable
 {
@@ -15,6 +15,7 @@ public class Sun extends GCompound implements Runnable
 
     /**
      * Constructor for objects of class Sun
+     * @param   game  the game PlantVsZombie
      */
     public Sun(PlantVsZombie game)
     {
@@ -34,6 +35,7 @@ public class Sun extends GCompound implements Runnable
             pause(DELAY);
         }
     }
+    
     // control the animation
     private void oneTimeStep(){
         movePolar(30,90);

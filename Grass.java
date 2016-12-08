@@ -13,7 +13,13 @@ public class Grass extends GCompound {
     boolean filled = false;
     GRect grass;
 
-    /** The constructor creates the grass cell */
+    /** 
+     * The constructor creates the grass cell
+     * @param   row     the row in the grid
+     * @param   col     the column in the grid
+     * @param   darker  thether the cell is darker
+     * @param   game    the game PlantVsZombie
+     */
     public Grass(int row, int col, boolean darker, PlantVsZombie game){
         this.row = row;
         this.col = col;

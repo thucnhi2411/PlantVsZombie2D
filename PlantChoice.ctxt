@@ -1,7 +1,7 @@
 #BlueJ class context
 comment0.params=draggable\ game
 comment0.target=PlantChoice(boolean,\ PlantVsZombie)
-comment0.text=The\ constructor\ creates\ the\ plantChoice\ cell
+comment0.text=\ \n\ The\ constructor\ creates\ the\ plantChoice\ cell\ \n\ @param\ \ \ draggable\ \ \ the\ boolean\ checking\ whether\ the\ choice\ is\ draggable\n\ @param\ \ \ game\ \ \ \ \ \ \ \ the\ game\ PlantVsZombie\n
 comment1.params=
 comment1.target=void\ changeColor()
 comment1.text=The\ changeColor\ method\ to\ change\ the\ color\ of\ draggable\ plantChoice
@@ -10,6 +10,7 @@ comment2.target=void\ setDraggable()
 comment2.text=Set\ draggable
 comment3.params=
 comment3.target=void\ notDraggable()
+comment3.text=Set\ not\ draggable
 comment4.params=
 comment4.target=void\ run()
 comment4.text=The\ run\ method
