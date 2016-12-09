@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.params=
-comment0.target=void\ init()
+comment0.target=void\ run()
 comment0.text=the\ init\ method
 comment1.params=point
 comment1.target=void\ mousePressed(acm.graphics.GPoint)
