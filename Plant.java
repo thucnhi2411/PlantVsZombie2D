@@ -10,7 +10,7 @@ import java.awt.*;
 public class Plant extends GCompound implements Runnable
 {
     // constants
-    private static final double DELAY = 3000;
+    private static final double DELAY = 1500;
     // instance variables 
     private PlantVsZombie game; // the main game
     private String type;

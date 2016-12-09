@@ -541,13 +541,17 @@ public class PlantVsZombie extends GraphicsProgram
     // Check if the plant choice is draggable
     public void checkDraggable(){
         for (int i = 0; i<5; i++){
-            if (sun>=50+i*50){
-                plantChoice[i].setDraggable();
+            if (plantChoice[i] == null) {
+                return ;
             } else {
-                plantChoice[i].notDraggable();
-            }
-            // change the color is the choice is draggable
-            plantChoice[i].changeColor();
+                if (sun>=50+i*50){
+                    plantChoice[i].setDraggable();
+                } else {
+                    plantChoice[i].notDraggable();
+                }
+                // change the color is the choice is draggable
+                plantChoice[i].changeColor();
+            } 
         }
     }
 
